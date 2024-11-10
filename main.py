@@ -2,16 +2,7 @@ import argparse
 import sys
 import importlib
 import pkgutil
-
-# Command registry
-COMMANDS = {}
-
-def register_command(name):
-    """Decorator to register a new command."""
-    def decorator(func):
-        COMMANDS[name] = func
-        return func
-    return decorator
+from command_registry import COMMANDS, register_command
 
 def load_commands():
     """Dynamically load command modules from the 'commands' package."""

@@ -1,4 +1,4 @@
-from main import register_command
+from command_registry import register_command
 
 def register():
     print("Hello module register() called")
