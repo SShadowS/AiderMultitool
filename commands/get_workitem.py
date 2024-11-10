@@ -1,5 +1,6 @@
 import requests
 import os
+import base64
 from command_registry import register_command
 
 def register():
@@ -37,9 +38,11 @@ def get_workitem(args, debug=False):
     try:
         # Prepare the API request
         url = f"https://dev.azure.com/{organization}/_apis/wit/workitems/{task_id}?api-version=6.0"
+        # Encode the credentials
+        credentials = base64.b64encode((':' + pat_token).encode('utf-8')).decode('utf-8')
         headers = {
             'Content-Type': 'application/json',
-            'Authorization': f'Basic {pat_token}'
+            'Authorization': f'Basic {credentials}'
         }
 
         if debug:
