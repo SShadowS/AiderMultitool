@@ -44,11 +44,20 @@ def main():
     load_commands(debug)
 
     # Dispatch command
-    command_func = COMMANDS.get(args.command)
+    command_func, help_text = get_command(args.command)
     if not command_func:
-        print(f"Unknown command '{args.command}'. Available commands: {', '.join(COMMANDS.keys())}")
+        print(f"Unknown command '{args.command}'.")
+        print("\nAvailable commands:")
+        for cmd_name, cmd_info in COMMANDS.items():
+            print(f"\n{cmd_name}:")
+            print(f"  {cmd_info['help'].strip()}")
         sys.exit(1)
     
+    # Show help if no arguments provided
+    if not args.args:
+        print(help_text)
+        sys.exit(0)
+        
     # Execute command
     try:
         result = command_func(args.args, debug=debug)

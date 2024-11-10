@@ -85,4 +85,16 @@ def get_workitem(args, debug=False):
         return error_msg
 
 def register():
-    register_command('get_workitem')(get_workitem)
+    help_text = """
+    Fetches work item details from Azure DevOps.
+    
+    Usage: get_workitem <organization> <taskId>
+    
+    Arguments:
+        organization: Azure DevOps organization name
+        taskId: ID of the work item to fetch
+        
+    Environment Variables:
+        AZURE_DEVOPS_PAT: Personal Access Token for Azure DevOps
+    """
+    register_command('get_workitem', help_text)(get_workitem)
