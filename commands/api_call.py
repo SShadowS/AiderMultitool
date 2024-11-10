@@ -1,5 +1,5 @@
 import requests
-from main import register_command
+from command_registry import register_command
 
 def register():
     register_command('api_call')(api_call)
