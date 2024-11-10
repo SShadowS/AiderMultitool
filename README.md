@@ -8,10 +8,10 @@ Tool for providing a context feedback to Aider
 - **Dependencies:** Install the required Python packages using:
 
   ```bash
-  pip install -r requirements.txt
+  # Install only the dependencies you need for specific commands
+  pip install -r commands/api_call_requirements.txt  # For api_call command
+  pip install -r commands/db_query_requirements.txt  # For db_query command
   ```
-
-  - If `requirements.txt` does not exist, create it and include all necessary packages (e.g., `requests`).
 
 - **Environment Variables:** Set any global environment variables needed by the application.
 
@@ -65,7 +65,7 @@ python main.py get_workitem myOrganization 12345
 - **Dependencies:** Ensure the required packages are installed:
 
   ```bash
-  pip install -r requirements.txt
+  pip install -r commands/api_call_requirements.txt
   ```
 
 ### api_call
@@ -87,7 +87,7 @@ python main.py api_call https://api.example.com/data
 - **Dependencies:** Install required packages using:
 
   ```bash
-  pip install -r requirements.txt
+  pip install -r commands/db_query_requirements.txt
   ```
 
 - **API Credentials:** If the API requires authentication, set the necessary environment variables:
