@@ -1,12 +1,9 @@
-import requests
-import os
-import base64
-from command_registry import register_command
-
-def register():
-    register_command('get_workitem')(get_workitem)
 import os
 import logging
+import base64
+from bs4 import BeautifulSoup
+import requests
+from command_registry import register_command
 # Configure logging
 logger = logging.getLogger(__name__)
 
@@ -15,7 +12,15 @@ try:
 except ImportError:
     raise ImportError(
         "The 'requests' library is required for this command. Install it using:\n"
-        "pip install -r commands/api_call_requirements.txt"
+        "pip install -r commands/get_workitem_requirements.txt"
+    )
+
+try:
+    from bs4 import BeautifulSoup
+except ImportError:
+    raise ImportError(
+        "The 'beautifulsoup4' library is required for this command. Install it using:\n"
+        "pip install -r commands/get_workitem_requirements.txt"
     )
 
 from command_registry import register_command
@@ -51,7 +56,26 @@ def get_workitem(args, debug=False):
         response = requests.get(url, headers=headers)
         response.raise_for_status()
 
-        return response.json()
+        # Parse the JSON response
+        data = response.json()
+        fields = data.get('fields', {})
+
+        # Extract relevant fields
+        title = fields.get('System.Title', 'No Title')
+        description = fields.get('System.Description', 'No Description')
+        assigned_to = fields.get('System.AssignedTo', {}).get('displayName', 'Unassigned')
+
+        # Clean HTML tags from the description
+        clean_description = BeautifulSoup(description, 'html.parser').get_text()
+
+        # Construct the prompt
+        prompt = (
+            f"Task Title: {title}\n"
+            f"Description: {clean_description}\n"
+            f"Assigned To: {assigned_to}\n"
+        )
+
+        return prompt
 
     except requests.exceptions.HTTPError as e:
         error_msg = f"HTTP error occurred: {e}"
