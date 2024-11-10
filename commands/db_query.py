@@ -1,5 +1,5 @@
 import mysql.connector
-from main import register_command
+from command_registry import register_command
 
 def register():
     register_command('db_query')(db_query)

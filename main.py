@@ -1,8 +1,7 @@
 import argparse
 import sys
 import importlib
-import pkgutil
-from command_registry import COMMANDS, register_command
+from command_registry import COMMANDS
 
 def load_commands():
     """Dynamically load command modules from the 'commands' package."""
