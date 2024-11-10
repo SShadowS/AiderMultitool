@@ -122,7 +122,7 @@ python main.py db_query "SELECT * FROM users;"
 - **Dependencies:** Install required packages using:
 
   ```bash
-  pip install -r requirements.txt
+  pip install -r commands/db_query_requirements.txt
   ```
 
 - **Database Configuration:** Set the following environment variables:
