@@ -1,5 +1,11 @@
 import os
-import psycopg2
+try:
+    import psycopg2
+except ImportError:
+    raise ImportError(
+        "The 'psycopg2-binary' library is required for this command. Install it using:\n"
+        "pip install -r commands/db_query_requirements.txt"
+    )
 from command_registry import register_command
 
 def db_query(args):

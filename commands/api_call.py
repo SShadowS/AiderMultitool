@@ -1,4 +1,11 @@
-import requests
+try:
+    import requests
+except ImportError:
+    raise ImportError(
+        "The 'requests' library is required for this command. Install it using:\n"
+        "pip install -r commands/api_call_requirements.txt"
+    )
+
 from command_registry import register_command
 
 def register():

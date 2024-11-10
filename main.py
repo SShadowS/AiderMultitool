@@ -35,8 +35,15 @@ def main():
         sys.exit(1)
     
     # Execute command
-    result = command_func(args.args)
-    print(result)
+    try:
+        result = command_func(args.args)
+        print(result)
+    except ImportError as e:
+        print(e)
+        sys.exit(1)
+    except Exception as e:
+        print(f"An error occurred while executing the command: {str(e)}")
+        sys.exit(1)
 
 if __name__ == '__main__':
     main()
