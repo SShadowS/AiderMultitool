@@ -95,7 +95,7 @@ python main.py api_call https://api.example.com/data
 - **Dependencies:** Install required packages using:
 
   ```bash
-  pip install -r commands/db_query_requirements.txt
+  pip install -r commands/api_call_requirements.txt
   ```
 
 - **API Credentials:** If the API requires authentication, set the necessary environment variables:
