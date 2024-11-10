@@ -12,6 +12,9 @@ def load_commands():
             module = importlib.import_module(f'commands.{module_name}')
             if hasattr(module, 'register'):
                 module.register()
+        except ImportError as e:
+            print(f"Skipping command '{module_name}' due to missing dependencies.")
+            print(e)
         except Exception as e:
             print(f"Error loading {module_name}: {str(e)}")
 
