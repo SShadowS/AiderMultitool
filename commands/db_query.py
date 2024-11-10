@@ -1,60 +1,72 @@
 import os
 import logging
-# Configure logging
-logger = logging.getLogger(__name__)
-
-try:
-    import psycopg2
-except ImportError:
-    raise ImportError(
-        "The 'psycopg2-binary' library is required for this command. Install it using:\n"
-        "pip install -r commands/db_query_requirements.txt"
-    )
+from sqlalchemy import create_engine, text
+from sqlalchemy.exc import SQLAlchemyError
+from dotenv import load_dotenv
 from command_registry import register_command
 
+# Configure logging
+logging.basicConfig(
+    filename='db_query.log',
+    level=logging.INFO,
+    format='%(asctime)s %(levelname)s: %(message)s',
+    datefmt='%Y-%m-%d %H:%M:%S'
+)
+logger = logging.getLogger(__name__)
+
 def db_query(args, debug=False):
-    """Executes a database query and returns the results."""
+    """
+    Executes a database query and returns the results.
+    
+    Args:
+        args (list): List containing the SQL query as first element
+        debug (bool): Enable debug logging if True
+        
+    Returns:
+        list: Query results as list of dictionaries
+    """
     if not args:
         return "Usage: db_query '<SQL_query>'"
 
-    # Get database configuration from environment variables
-    db_config = {
-        'host': os.getenv('DB_HOST'),
-        'port': os.getenv('DB_PORT'),
-        'user': os.getenv('DB_USER'),
-        'password': os.getenv('DB_PASSWORD'),
-        'database': os.getenv('DB_NAME')
-    }
-
-    # Check if all required environment variables are set
-    missing_vars = [k for k, v in db_config.items() if not v]
-    if missing_vars:
-        error_msg = f"Error: Missing required environment variables: {', '.join(missing_vars)}"
-        if debug:
-            logger.error(error_msg)
-        return error_msg
-
     try:
-        # Connect to the database
-        conn = psycopg2.connect(**db_config)
-        cur = conn.cursor()
-
-        # Execute the query
-        cur.execute(args[0])
+        load_dotenv()
         
-        # Fetch results
-        results = cur.fetchall()
+        # Get database configuration from environment variables
+        db_config = {
+            'host': os.getenv('DB_HOST'),
+            'port': os.getenv('DB_PORT'),
+            'user': os.getenv('DB_USER'),
+            'password': os.getenv('DB_PASSWORD'),
+            'database': os.getenv('DB_NAME')
+        }
+
+        # Check if all required environment variables are set
+        missing_vars = [k for k, v in db_config.items() if not v]
+        if missing_vars:
+            error_msg = f"Error: Missing required environment variables: {', '.join(missing_vars)}"
+            logger.error(error_msg)
+            return error_msg
+
+        # Create database URL
+        db_url = f"postgresql://{db_config['user']}:{db_config['password']}@{db_config['host']}:{db_config['port']}/{db_config['database']}"
         
-        # Close database connection
-        cur.close()
-        conn.close()
+        # Create engine and execute query
+        engine = create_engine(db_url)
+        with engine.connect() as conn:
+            logger.info(f"Executing query: {args[0]}")
+            result = conn.execute(text(args[0]))
+            rows = [dict(row) for row in result]
+            logger.info(f"Query returned {len(rows)} results")
+            return rows
 
-        return results
-
-    except psycopg2.Error as e:
-        return f"Database error: {str(e)}"
+    except SQLAlchemyError as e:
+        error_msg = f"Database error: {str(e)}"
+        logger.error(error_msg)
+        return error_msg
     except Exception as e:
-        return f"Error: {str(e)}"
+        error_msg = f"Unexpected error: {str(e)}"
+        logger.error(error_msg)
+        return error_msg
 
 def register():
     register_command('db_query')(db_query)
