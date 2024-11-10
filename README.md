@@ -65,8 +65,16 @@ python main.py get_workitem myOrganization 12345
 - **Dependencies:** Ensure the required packages are installed:
 
   ```bash
-  pip install -r commands/api_call_requirements.txt
+  pip install -r commands/get_workitem_requirements.txt
   ```
+
+**Debugging:**
+
+If you encounter issues or need more detailed logs, you can enable debug mode by adding the `--debug` flag:
+
+```bash
+python main.py --debug get_workitem <organization> <taskId>
+```
 
 ### api_call
 
