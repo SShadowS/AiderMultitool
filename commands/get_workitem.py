@@ -1,29 +1,25 @@
 import os
 import logging
 import base64
-from bs4 import BeautifulSoup
 import requests
+from bs4 import BeautifulSoup
 from command_registry import register_command
+
 # Configure logging
 logger = logging.getLogger(__name__)
 
-try:
-    import requests
-except ImportError:
+# Check required dependencies
+if not hasattr(requests, 'get'):
     raise ImportError(
         "The 'requests' library is required for this command. Install it using:\n"
         "pip install -r commands/get_workitem_requirements.txt"
     )
 
-try:
-    from bs4 import BeautifulSoup
-except ImportError:
+if not hasattr(BeautifulSoup, '__call__'):
     raise ImportError(
         "The 'beautifulsoup4' library is required for this command. Install it using:\n"
         "pip install -r commands/get_workitem_requirements.txt"
     )
-
-from command_registry import register_command
 
 def get_workitem(args, debug=False):
     """Fetches Azure DevOps work item data and returns the task details."""
