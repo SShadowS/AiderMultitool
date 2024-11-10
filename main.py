@@ -15,8 +15,10 @@ def register_command(name):
 
 def load_commands():
     """Dynamically load command modules from the 'commands' package."""
+    import os
     package = 'commands'
-    for loader, module_name, is_pkg in pkgutil.iter_modules([package.replace('.', '/')]):
+    commands_dir = os.path.join(os.path.dirname(__file__), package)
+    for loader, module_name, is_pkg in pkgutil.iter_modules([commands_dir]):
         module = importlib.import_module(f'{package}.{module_name}')
         if hasattr(module, 'register'):
             module.register()
