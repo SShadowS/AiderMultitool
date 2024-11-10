@@ -1,21 +1,17 @@
 import argparse
 import sys
 import importlib
+import pkgutil
 from command_registry import COMMANDS
 
 def load_commands():
-    """Dynamically load command modules from the 'commands' package."""
+    """Dynamically load and register command modules from the 'commands' package."""
     import commands
-    print("Loading commands...")
-    for module_name in ['hello', 'api_call', 'db_query']:
+    for loader, module_name, is_pkg in pkgutil.iter_modules(commands.__path__):
         try:
-            print(f"Attempting to load {module_name}")
             module = importlib.import_module(f'commands.{module_name}')
-            print(f"Module {module_name} loaded")
             if hasattr(module, 'register'):
-                print(f"Registering {module_name}")
                 module.register()
-                print(f"Registered {module_name}")
         except Exception as e:
             print(f"Error loading {module_name}: {str(e)}")
 
