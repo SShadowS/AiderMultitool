@@ -8,7 +8,7 @@ except ImportError:
     )
 from command_registry import register_command
 
-def db_query(args):
+def db_query(args, debug=False):
     """Executes a database query and returns the results."""
     if not args:
         return "Usage: db_query '<SQL_query>'"
@@ -25,7 +25,10 @@ def db_query(args):
     # Check if all required environment variables are set
     missing_vars = [k for k, v in db_config.items() if not v]
     if missing_vars:
-        return f"Error: Missing required environment variables: {', '.join(missing_vars)}"
+        error_msg = f"Error: Missing required environment variables: {', '.join(missing_vars)}"
+        if debug:
+            logger.error(error_msg)
+        return error_msg
 
     try:
         # Connect to the database
