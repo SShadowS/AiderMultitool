@@ -4,7 +4,7 @@ import importlib
 import pkgutil
 import os
 import logging
-from command_registry import COMMANDS
+from command_registry import COMMANDS, get_command
 
 # Configure logging
 logging.basicConfig(format='%(levelname)s: %(message)s')
