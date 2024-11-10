@@ -1,4 +1,8 @@
 import os
+import logging
+# Configure logging
+logger = logging.getLogger(__name__)
+
 try:
     import psycopg2
 except ImportError:
