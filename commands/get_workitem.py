@@ -1,21 +1,23 @@
 import os
 import logging
 import base64
-import requests
-from bs4 import BeautifulSoup
 from command_registry import register_command
 
 # Configure logging
 logger = logging.getLogger(__name__)
 
 # Check required dependencies
-if not hasattr(requests, 'get'):
+try:
+    import requests
+except ImportError:
     raise ImportError(
         "The 'requests' library is required for this command. Install it using:\n"
         "pip install -r commands/get_workitem_requirements.txt"
     )
 
-if not hasattr(BeautifulSoup, '__call__'):
+try:
+    from bs4 import BeautifulSoup
+except ImportError:
     raise ImportError(
         "The 'beautifulsoup4' library is required for this command. Install it using:\n"
         "pip install -r commands/get_workitem_requirements.txt"
