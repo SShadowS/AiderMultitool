@@ -66,9 +66,10 @@ def get_workitem(args, debug=False):
 
         # Construct the prompt
         prompt = (
+            f"Implement the following task:\n"
             f"Task Title: {title}\n"
             f"Description: {clean_description}\n"
-            f"Assigned To: {assigned_to}\n"
+            #f"Assigned To: {assigned_to}\n"
         )
 
         return prompt
